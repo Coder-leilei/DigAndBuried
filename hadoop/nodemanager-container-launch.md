@@ -56,9 +56,9 @@ Container执行器进程结束可能有下面几种可能状态：
 +   container.getLaunchContext().getCommands()返回一个字符串list。AM在请求NodeManager启动container会写这个List。
 +   AM提交的commands列表中对于container执行过程中日志目录和操作系统类型不清楚，因此NodeManager针对这块提供三个常量
 
-> <LOG_DIR>：表示container运行时的日志目录，AM采用该常量进行标示
-> <CPS>：window和linux针对目录分隔符的不同，AM提供的commands中如果有目录路径分隔符，用该常量进行替换
-> {{和}}来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用{{}}来对系统常量进行标示
+> LOG_DIR：表示container运行时的日志目录，AM采用该常量进行标示
+> CPS：window和linux针对目录分隔符的不同，AM提供的commands中如果有目录路径分隔符，用该常量进行替换
+> `{{和}}`来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{}}`来对系统常量进行标示
 
 +   ENV的设置。AM提交的container请求中包含一部分用户自定义的container，但是NodeManager需要对这部分进行处理，主要是添加一些内部环境变量，用内部的环境变量覆盖用户
 设置可能存在风险和错误的环境变量。涉及到环境变量还是很多，参阅ContainerLaunch.sanitizeEnv()函数。
