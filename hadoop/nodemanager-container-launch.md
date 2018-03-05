@@ -73,8 +73,6 @@ ret = exec.launchContainer(container, nmPrivateContainerScriptPath,nmPrivateToke
 注意该函数的调用是堵塞的，在调度的进程退出之前，该函数是不会退出。
 
 最后，针对ContainerLaunch附上一个所生成的ContainLaunch脚本的，通过该脚本，可以看出ContainerLaunch对环境变量等做了什么工作。
-
-
 ```
 #!/bin/bash
 export JAVA_HOME="/home/java"
@@ -120,11 +118,6 @@ org.apache.hadoop.mapred.YarnChild 10.214.19.62 38007 attempt_1413959353312_0110
 1>/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stdout
 2>/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stderr "
 ```
-
-
-
-
-
 ###ContainerExecutor
 ContainerExecutor类在NodeManager的根包下面，第一次阅读NodeManager源码，就误以为它充当上文提到的ContainerLaunch角色。   经过对NodeManager里面的角色进行梳理，ContainerExecutor和ContainerLaunch最大的区别是，ContainerExecutor在NodeManager是一个全局的对象，整个NodeManager中只有一个ContainerExecutor，在NodeManager的serviceInit中进行初始化。而ContainerLaunch是一个线程，针对每个Container都会新建一个对象。
 
