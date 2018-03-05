@@ -75,7 +75,7 @@ Spark SQL是Spark内部最核心以及社区最为活跃的组件，也是未来
 
 ### [MLLib Pipeline的实现分析](./spark/mllib-pipeline.md)
 
-Spark中的Mllib一直朝着可实践性的方法前进着, 而Pipeline是这个过程中一个很重要的功能. 在2014年11月,孟祥瑞在Spark MLLib代码中CI了一个全新的package:"org.apache.spark.ml",   
+Spark中的Mllib一直朝着可实践性的方法前进着, 而Pipeline是这个过程中一个很重要的功能. 在2014年11月,孟祥瑞在Spark MLLib代码中CI了一个全新的package:"org.apache.spark.ml",  
 和传统的"org.apache.spark.mllib"独立, 这个包即Spark MLLib的Pipeline and Parameters功能. 到目前为止,这个package只有三次ci, 代码量也较少,但是基本上可以清楚看到pipeline逻辑,  
 这里开第一个mllib的坑, 开始对mllib进行深入学习.
 
@@ -93,7 +93,7 @@ Spark中的Mllib一直朝着可实践性的方法前进着, 而Pipeline是这个
 
 ### [两种ShuffleManager的实现:Hash和Sort](./spark/shuffle-hash-sort.md)
 
-在《[Spark基础以及Shuffle实现分析](./spark/shuffle-study.md)》中分析了Spark的Shuffle的实现,但是其中遗留了两个问题.   
+在《[Spark基础以及Shuffle实现分析](./spark/shuffle-study.md)》中分析了Spark的Shuffle的实现,但是其中遗留了两个问题.  
 本文针对第二个问题:"具体shuffleManager和shuffleBlockManager的实现"进行分析, 即HashShuffle和SortShuffle当前Spark中支持了两种ShuffleManager的实现;  
 其中SortShuffle是spark1.1版本发布的,详情参见:[Sort-based shuffle implementation](https://issues.apache.org/jira/browse/SPARK-2045)  
 本文将对这两种Shuffle的实现进行分析.
