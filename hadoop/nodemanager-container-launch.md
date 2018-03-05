@@ -38,11 +38,11 @@ Container执行器进程结束可能有下面几种可能状态：
 + `yarn.nodemanager.log-dirs`：NodeManager在运行过程中所调度的所有进程和container都有相应的日志目录，该配置即为所有日志目录的根目录
 + `distribuction cache`：Yarn在NodeManager中实现了传统MapReduce中的`distribuction cache`的逻辑，其中cache分为public,private,app三个级别。
 
-> `public`：全局权限，由NodeManager直接下载到`{*.local-dirs}/filecache`目录下面    
-
-> `private`：用户私有权限。NodeManager为每个用户维护一个Cache目录，其中`{*.local-dirs}/usercache/{username}/filecache`为用户层面的文件  
-
->`application`：应用层面。NodeManager为指定用户的每个app创建一个本地目录,其中`{*.local-dirs}/usercache/{username}/appcache/{app_id}/filecache`内部维护app层面的文件，app结束以后会被清理。 具体文件本地化后面会专门进行分析，差不多是Nodemanager中一个饿比较拗口的模块。
+  > `public`：全局权限，由NodeManager直接下载到`{*.local-dirs}/filecache`目录下面    
+  
+  > `private`：用户私有权限。NodeManager为每个用户维护一个Cache目录，其中`{*.local-dirs}/usercache/{username}/filecache`为用户层面的文件  
+  
+  >`application`：应用层面。NodeManager为指定用户的每个app创建一个本地目录,其中`{*.local-dirs}/usercache/{username}/appcache/{app_id}/filecache`内部维护app层面的文件，app结束以后会被清理。 具体文件本地化后面会专门进行分析，差不多是Nodemanager中一个饿比较拗口的模块。
 
 + `{*.local-dirs}/nmPrivate`:是NodeManager运行过程中私有目录，这个运行不包括Container进程运行过程中生成的数据。NodeManager在调度过程中，会在该`{*.local-dirs}/nmPrivate`目录下为每个app的每个container创建一个临时目录，从而可以为container运行之前做好一些准备。这些准备包括:
 
@@ -65,7 +65,7 @@ Container执行器进程结束可能有下面几种可能状态：
 
     > CPS：window和linux针对目录分隔符的不同，AM提供的commands中如果有目录路径分隔符，用该常量进行替换    
 
-    > `{{和}}`来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{和}}`来对系统常量进行标示
+    > 用来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{`和`}}`来对系统常量进行标示
 
 + ENV的设置。AM提交的container请求中包含一部分用户自定义的container，但是NodeManager需要对这部分进行处理，主要是添加一些内部环境变量，用内部的环境变量覆盖用户
 设置可能存在风险和错误的环境变量。涉及到环境变量还是很多，参阅`ContainerLaunch.sanitizeEnv()`函数。
