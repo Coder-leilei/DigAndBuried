@@ -73,6 +73,58 @@ ret = exec.launchContainer(container, nmPrivateContainerScriptPath,nmPrivateToke
 注意该函数的调用是堵塞的，在调度的进程退出之前，该函数是不会退出。
 
 最后，针对ContainerLaunch附上一个所生成的ContainLaunch脚本的，通过该脚本，可以看出ContainerLaunch对环境变量等做了什么工作。
+
+
+```
+#!/bin/bash
+export JAVA_HOME="/home/java"
+export NM_AUX_SERVICE_mapreduce_shuffle="AAA0+gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+export NM_HOST="××××××"
+export HADOOP_YARN_HOME="/home/hadoop"
+export HADOOP_ROOT_LOGGER="INFO,CLA"
+export JVM_PID="$PID"
+export STDERR_LOGFILE_ENV="/home/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stderr"
+export PWD="/home/data/hadoop/tmp/nm-local-dir/usercache/work/appcache/application_1413959353312_0110/container_1413959353312_0110_01_000705"
+export NM_PORT="18476"
+export LOGNAME="work"
+export MALLOC_ARENA_MAX="4"
+export LD_LIBRARY_PATH="$PWD:/home/hadoop/lib/native"
+export LOG_DIRS="/home/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705"
+export NM_HTTP_PORT="8042"
+export SHELL="/bin/bash"
+export LOCAL_DIRS="/home/data/hadoop/tmp/nm-local-dir/usercache/work/appcache/application_1413959353312_0110"
+export HADOOP_COMMON_HOME="/home/hadoop"
+export HADOOP_TOKEN_FILE_LOCATION="/home/data/dataplatform/data/hadoop/tmp/nm-local-dir/usercache/work/appcache/application_1413959353312_0110/container_1413959353312_0110_01_000705/container_tokens"
+export CLASSPATH="$PWD:$HADOOP_CONF_DIR:$HADOOP_COMMON_HOME/share/hadoop/common/*:。。。。
+export STDOUT_LOGFILE_ENV="/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stdout"
+export USER="data"
+export HADOOP_CLIENT_OPTS="-Xmx1024m-Xmx1024m -Dlog4j.configuration=container-log4j.properties -Dyarn.app.container.log.dir=/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705 -Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA"
+export HADOOP_HDFS_HOME="/home/hadoop"
+export CONTAINER_ID="container_1413959353312_0110_01_000705"
+export HOME="/home/"
+export HADOOP_CONF_DIR="/home/hadoop/etc/hadoop"
+
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/filecache/535/guava-11.0.2.jar" "guava-11.0.2.jar"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/filecache/57/partitions_b545f344-5ebc-4265-a691-7c3a4f764796" "_partition.lst"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/filecache/538/zookeeper-3.4.5.jar" "zookeeper-3.4.5.jar"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/filecache/537/protobuf-java-2.5.0.jar" "protobuf-java-2.5.0.jar"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/appcache/application_1413959353312_0110/filecache/15/job.xml" "job.xml"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/filecache/536/hadoop-mapreduce-client-core-2.2.0.jar" "hadoop-mapreduce-client-core-2.2.0.jar"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/filecache/539/hbase-0.94.6.jar" "hbase-0.94.6.jar"
+ln -sf "/home/data/hadoop/tmp/nm-local-dir/usercache/work/appcache/application_1413959353312_0110/filecache/14/job.jar" "job.jar"
+
+exec /bin/bash -c "$JAVA_HOME/bin/java -Djava.net.preferIPv4Stack=true -Dhadoop.metrics.log.level=WARN -Xmx1024m -Djava.io.tmpdir=$PWD/tmp -Dlog4j.configuration=container-log4j.properties
+-Dyarn.app.container.log.dir=/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705
+-Dyarn.app.container.log.filesize=0 -Dhadoop.root.logger=INFO,CLA
+org.apache.hadoop.mapred.YarnChild 10.214.19.62 38007 attempt_1413959353312_0110_m_000775_0 705
+1>/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stdout
+2>/home/data/dataplatform/log/hadoop/yarn/userlogs/application_1413959353312_0110/container_1413959353312_0110_01_000705/stderr "
+```
+
+
+
+
+
 ###ContainerExecutor
 ContainerExecutor类在NodeManager的根包下面，第一次阅读NodeManager源码，就误以为它充当上文提到的ContainerLaunch角色。   经过对NodeManager里面的角色进行梳理，ContainerExecutor和ContainerLaunch最大的区别是，ContainerExecutor在NodeManager是一个全局的对象，整个NodeManager中只有一个ContainerExecutor，在NodeManager的serviceInit中进行初始化。而ContainerLaunch是一个线程，针对每个Container都会新建一个对象。
 
