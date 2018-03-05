@@ -30,7 +30,7 @@ Container执行器进程结束可能有下面几种可能状态：
 +   CONTAINER_EXITED_WITH_SUCCESS：Container进程执行成功，并正常退出，返回0错误码。
 
 至于ExitCode.LOST超出本文讨论的访问，这里就不描述了。。。
-面熟悉一下NodeMananger中一些目录规范，NodeManager中很多任务都和这几个目录在打交道。
+下面熟悉一下NodeMananger中一些目录规范，NodeManager中很多任务都和这几个目录在打交道。
 
 + `hadoop.tmp.dir`：Hadoop的全局tmp目录，包括Yarn在内的各个模块在运行过程中默认都是在该目录中创建相应的临时目录
 + `yarn.nodemanager.local-dirs`：NodeManager负责Container的运行和调度，运行过程中涉及到大量的文件包括map的输出，这个目录就是NodeManager运行过程中所有目录的根目录。
@@ -43,10 +43,10 @@ Container执行器进程结束可能有下面几种可能状态：
 
 + `{*.local-dirs}/nmPrivate`:是NodeManager运行过程中私有目录，这个运行不包括Container进程运行过程中生成的数据。NodeManager在调度过程中，会在该`{*.local-dirs}/nmPrivate`目录下为每个app的每个container创建一个临时目录，从而可以为container运行之前做好一些准备。这些准备包括:
 
-> container运行之前，需要针对进程生成执行脚本，脚本就放在{*.local-dirs}/nmPrivate/appid/containerid/launch_container文件中
-> container运行之前，需要针对进程生成token文件，内容就放在{*.local-dirs}/nmPrivate/appid/containerid/containerid.tokens文件中
-> container运行过程中，会在{*.local-dirs}/nmPrivate/appid/containerid/containerid.pid中创建container的pid文件，从而实现运行过程中监控该文件来确定container进程是否退出
->container运行结束后，会在{*.local-dirs}/nmPrivate/appid/containerid/containerid.pid.exitcode中写入container进程执行退出码，从而实现NodeManager获取container的执行结果。
+> container运行之前，需要针对进程生成执行脚本，脚本就放在`{*.local-dirs}/nmPrivate/appid/containerid/launch_container`文件中
+> container运行之前，需要针对进程生成token文件，内容就放在`{*.local-dirs}/nmPrivate/appid/containerid/containerid.tokens`文件中
+> container运行过程中，会在`{*.local-dirs}/nmPrivate/appid/containerid/containerid.pid`中创建container的pid文件，从而实现运行过程中监控该文件来确定container进程是否退出
+>container运行结束后，会在`{*.local-dirs}/nmPrivate/appid/containerid/containerid.pid.exitcode`中写入container进程执行退出码，从而实现NodeManager获取container的执行结果。
 >
 > nmPrivate目录是NodeManager运行的私有目录，而不是container运行的pwd。上述生成container执行脚本和token在进行container启动时，会将它复制到container的pwd中。默认`pwd={*.local-dirs}/appcache/{username}/appcache/{app_id}/{containerid}`
 
