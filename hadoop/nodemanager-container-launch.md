@@ -16,11 +16,16 @@ ContainLaunch是位于NodeManager中负责启停Container执行器进程的线�
 
 首先从最简单的进程退出错误码来看Container状态。
 
-	public enum ExitCode {
+
+```
+public enum ExitCode {
 		FORCE_KILLED(137),
 		TERMINATED(143),
 		LOST(154);
 	}
+
+
+```
 
 Container执行器进程结束可能有下面几种可能状态：
 
@@ -57,11 +62,22 @@ Container执行器进程结束可能有下面几种可能状态：
 
 > LOG_DIR：表示container运行时的日志目录，AM采用该常量进行标示
 > CPS：window和linux针对目录分隔符的不同，AM提供的commands中如果有目录路径分隔符，用该常量进行替换
-> `{{和}}`来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{}}`来对系统常量进行标示
 
 + ENV的设置。AM提交的container请求中包含一部分用户自定义的container，但是NodeManager需要对这部分进行处理，主要是添加一些内部环境变量，用内部的环境变量覆盖用户
 设置可能存在风险和错误的环境变量。涉及到环境变量还是很多，参阅`ContainerLaunch.sanitizeEnv()`函数。
 + 最后就写token和执行脚本到上面谈到两个文件中，执行脚本的生成内容很丰富，上面设置的环境变量也会写到该文件中。
 
 到目前为止ContainLaunch已经完成对container所有的初始化工作，此时需要做的工作就是将container的进程起起来，这个过程是通过调用ContainerExecutor来实现的
+```
+exec.activateContainer(containerID, pidFilePath);
+ret = exec.launchContainer(container, nmPrivateContainerScriptPath,nmPrivateTokensPath, user, appIdStr, containerWorkDir,localDirs, logDirs);
+
+```
+
+
+
+注意该函数的调用是堵塞的，在调度的进程退出之前，该函数是不会退出。
+
+最后，针对ContainerLaunch附上一个所生成的ContainLaunch脚本的，通过该脚本，可以看出ContainerLaunch对环境变量等做了什么工作。
+
 
