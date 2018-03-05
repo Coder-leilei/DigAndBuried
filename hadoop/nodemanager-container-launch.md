@@ -15,16 +15,12 @@ NodeManager解析系列二：Container的启动
 ContainLaunch是位于NodeManager中负责启停Container执行器进程的线程，它继承`Callable<Integer>`接口，返回Integer的值，这个值即为所监控的Container执行器进程退出的`ExitCode`。
 
 首先从最简单的进程退出错误码来看Container状态。
-
-
 ```
 public enum ExitCode {
 		FORCE_KILLED(137),
 		TERMINATED(143),
 		LOST(154);
 	}
-
-
 ```
 
 Container执行器进程结束可能有下面几种可能状态：
@@ -62,7 +58,7 @@ Container执行器进程结束可能有下面几种可能状态：
 
 > LOG_DIR：表示container运行时的日志目录，AM采用该常量进行标示
 > CPS：window和linux针对目录分隔符的不同，AM提供的commands中如果有目录路径分隔符，用该常量进行替换
-> `{{和}}`来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{ }}`来对系统常量进行标示
+> `{{和}}`来对系统常量进行替换。window下面用%VAR%来表示系统常量，而linux用$VAR。为了保证代码平台无关，采用`{{和}}`来对系统常量进行标示
 
 + ENV的设置。AM提交的container请求中包含一部分用户自定义的container，但是NodeManager需要对这部分进行处理，主要是添加一些内部环境变量，用内部的环境变量覆盖用户
 设置可能存在风险和错误的环境变量。涉及到环境变量还是很多，参阅`ContainerLaunch.sanitizeEnv()`函数。
